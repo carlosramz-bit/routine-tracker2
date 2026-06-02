@@ -1,0 +1,350 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  .app{font-family:'DM Sans',sans-serif;background:#0a0a0f;min-height:100vh;color:#fff;padding:0 0 3rem}
+
+  .hero{position:relative;overflow:hidden;padding:2.5rem 1.5rem 2rem;background:#0a0a0f}
+  .hero-bg{position:absolute;inset:0;z-index:0}
+  .hero-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#fff;position:relative;z-index:1;line-height:1.15}
+  .hero-title span{color:#FFD600}
+  .hero-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-top:6px;position:relative;z-index:1}
+  .hero-date{font-size:12px;color:#FFD600;font-weight:500;margin-bottom:8px;position:relative;z-index:1;letter-spacing:0.06em;text-transform:uppercase}
+
+  .quote-band{background:#FFD600;padding:12px 1.5rem;display:flex;align-items:center;gap:10px}
+  .quote-text{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#0a0a0f;flex:1}
+  .quote-icon{font-size:18px;color:#0a0a0f;opacity:0.5}
+
+  .body{padding:1.25rem 1.5rem}
+
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+  .stat{background:#16161f;border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 12px}
+  .stat-label{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px}
+  .stat-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#FFD600}
+  .stat-sub{font-size:10px;color:rgba(255,255,255,0.35);margin-top:3px}
+
+  .section-label{font-size:10px;font-weight:500;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px}
+
+  .prog-wrap{margin-bottom:1.5rem}
+  .prog-top{display:flex;justify-content:space-between;margin-bottom:8px}
+  .prog-text{font-size:13px;color:rgba(255,255,255,0.5)}
+  .prog-pct{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#FFD600}
+  .prog-track{background:rgba(255,255,255,0.07);border-radius:100px;height:6px;overflow:hidden}
+  .prog-fill{height:100%;border-radius:100px;background:#FFD600;transition:width 0.4s cubic-bezier(.4,0,.2,1)}
+
+  .week-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:1.5rem}
+  .wday{display:flex;flex-direction:column;align-items:center;gap:5px}
+  .wday-lbl{font-size:9px;color:rgba(255,255,255,0.3);font-weight:500;letter-spacing:0.04em;text-transform:uppercase}
+  .wday-dot{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,0.3);font-family:'Syne',sans-serif;font-weight:700}
+  .wday-dot.today{border-color:#FFD600;color:#FFD600}
+  .wday-dot.full{background:#FFD600;border-color:#FFD600;color:#0a0a0f}
+  .wday-dot.partial{background:rgba(255,214,0,0.2);border-color:rgba(255,214,0,0.5);color:#FFD600}
+
+  .habits{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
+  .habit{display:flex;align-items:center;gap:12px;background:#16161f;border:0.5px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 16px;cursor:pointer;transition:border-color 0.15s,background 0.15s;user-select:none}
+  .habit:hover{border-color:rgba(255,214,0,0.3)}
+  .habit.done{background:rgba(255,214,0,0.07);border-color:rgba(255,214,0,0.35)}
+  .check{width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+  .habit.done .check{background:#FFD600;border-color:#FFD600}
+  .check i{font-size:14px;color:rgba(255,255,255,0.2);transition:all 0.15s}
+  .habit.done .check i{color:#0a0a0f}
+  .hinfo{flex:1}
+  .hname{font-size:14px;font-weight:500;color:#fff;transition:all 0.15s}
+  .habit.done .hname{color:rgba(255,255,255,0.35);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.2)}
+  .hmeta{font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px}
+  .hright{display:flex;align-items:center;gap:8px}
+  .streak-badge{display:flex;align-items:center;gap:3px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.4)}
+  .streak-badge i{font-size:14px;color:#FF6B35}
+  .del-btn{width:24px;height:24px;border-radius:50%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.1s}
+  .habit:hover .del-btn{opacity:1}
+  .del-btn i{font-size:13px;color:rgba(255,255,255,0.3)}
+  .del-btn:hover i{color:#ff4d4d}
+
+  .empty{text-align:center;padding:2rem;color:rgba(255,255,255,0.25);font-size:13px}
+  .empty i{font-size:28px;display:block;margin-bottom:8px;opacity:0.3}
+
+  .add-box{background:#16161f;border:0.5px dashed rgba(255,255,255,0.15);border-radius:14px;padding:16px}
+  .add-row{display:flex;gap:8px}
+  .add-input{flex:1;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 14px;font-size:14px;color:#fff;outline:none;font-family:'DM Sans',sans-serif}
+  .add-input::placeholder{color:rgba(255,255,255,0.25)}
+  .add-input:focus{border-color:#FFD600}
+  .add-btn{padding:10px 18px;background:#FFD600;color:#0a0a0f;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;white-space:nowrap}
+  .add-btn:hover{background:#ffe433}
+  .emoji-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .ebtn{width:32px;height:32px;border-radius:8px;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:border-color 0.1s}
+  .ebtn.sel{border-color:#FFD600;background:rgba(255,214,0,0.12)}
+  .tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .tag{padding:5px 12px;border-radius:100px;border:0.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.1s}
+  .tag.sel{background:rgba(255,214,0,0.12);border-color:#FFD600;color:#FFD600}
+
+  .illu-section{padding:0 1.5rem;margin-bottom:1.5rem}
+  .illu-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .illu-card{border-radius:14px;padding:16px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-height:90px}
+  .illu-card.orange{background:linear-gradient(135deg,#FF6B35,#FF8C42)}
+  .illu-card.blue{background:linear-gradient(135deg,#4361EE,#7B8CDE)}
+  .illu-card.green{background:linear-gradient(135deg,#2DC653,#57CC99)}
+  .illu-icon{font-size:22px;color:rgba(255,255,255,0.9)}
+  .illu-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#fff;line-height:1.3}
+  .illu-desc{font-size:10px;color:rgba(255,255,255,0.7)}
+</style>
+
+<div class="app">
+  <h2 class="sr-only">Daily routine tracker with motivational design — track habits and build streaks</h2>
+
+  <div class="hero">
+    <svg class="hero-bg" viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="320" cy="30" r="80" fill="rgba(255,214,0,0.06)"/>
+      <circle cx="350" cy="120" r="50" fill="rgba(255,107,53,0.06)"/>
+      <circle cx="60" cy="140" r="60" fill="rgba(67,97,238,0.05)"/>
+      <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+      <line x1="0" y1="110" x2="400" y2="110" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+      <line x1="100" y1="0" x2="100" y2="160" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+      <line x1="250" y1="0" x2="250" y2="160" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+      <polygon points="380,0 400,0 400,40" fill="rgba(255,214,0,0.08)"/>
+      <polygon points="0,130 0,160 50,160" fill="rgba(255,107,53,0.06)"/>
+    </svg>
+    <div class="hero-date" id="hero-date"></div>
+    <div class="hero-title">Build habits.<br>Win every <span>day.</span></div>
+    <div class="hero-sub" id="hero-sub">Stay consistent. Progress compounds.</div>
+  </div>
+
+  <div class="quote-band">
+    <i class="ti ti-quote quote-icon" aria-hidden="true"></i>
+    <div class="quote-text" id="quote-text">Discipline is choosing between what you want now and what you want most.</div>
+  </div>
+
+  <div class="body">
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">Today</div>
+        <div class="stat-val" id="s-today">0/0</div>
+        <div class="stat-sub">done</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Streak</div>
+        <div class="stat-val" id="s-streak">0</div>
+        <div class="stat-sub">days</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">This week</div>
+        <div class="stat-val" id="s-week">0%</div>
+        <div class="stat-sub">rate</div>
+      </div>
+    </div>
+
+    <div class="illu-section" style="padding:0;margin-bottom:1.5rem">
+      <div class="illu-cards">
+        <div class="illu-card orange">
+          <i class="ti ti-bolt illu-icon" aria-hidden="true"></i>
+          <div class="illu-title">Stay consistent</div>
+          <div class="illu-desc">Every day counts</div>
+        </div>
+        <div class="illu-card blue">
+          <i class="ti ti-trophy illu-icon" aria-hidden="true"></i>
+          <div class="illu-title">Build streaks</div>
+          <div class="illu-desc">Don't break the chain</div>
+        </div>
+        <div class="illu-card green">
+          <i class="ti ti-trending-up illu-icon" aria-hidden="true"></i>
+          <div class="illu-title">Level up</div>
+          <div class="illu-desc">1% better daily</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-top">
+        <span class="prog-text">Today's progress</span>
+        <span class="prog-pct" id="prog-pct">0%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="section-label">This week</div>
+    <div class="week-row" id="week-row"></div>
+
+    <div class="section-label">Your habits</div>
+    <div class="habits" id="habits-list"></div>
+
+    <div class="add-box">
+      <div class="add-row">
+        <input class="add-input" id="add-input" placeholder="Add a new habit..." maxlength="50"/>
+        <button class="add-btn" id="add-btn">Add</button>
+      </div>
+      <div class="emoji-row" id="emoji-row"></div>
+      <div class="tags" id="tags"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const EMOJIS=['🌅','💧','🏃','📖','🧘','🥗','😴','💊','🎯','✍️','🎨','🎵'];
+const TIMES=['Morning','Afternoon','Evening','Anytime'];
+const DAYS=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const QUOTES=[
+  'Discipline is choosing between what you want now and what you want most.',
+  'Success is the sum of small efforts repeated day in and day out.',
+  'You don\'t rise to the level of your goals, you fall to the level of your systems.',
+  'The secret of getting ahead is getting started.',
+  'Excellence is not a destination but a continuous journey.'
+];
+
+let state={habits:[],completions:{},selEmoji:'🎯',selTime:'Anytime'};
+
+function todayKey(){return new Date().toISOString().slice(0,10);}
+function getToday(){return state.completions[todayKey()]||{};}
+function setToday(m){state.completions[todayKey()]=m;}
+
+async function persist(){
+  try{await window.storage.set('rt-vibrant-v1',JSON.stringify(state));}catch(e){}
+}
+async function hydrate(){
+  try{const r=await window.storage.get('rt-vibrant-v1');if(r&&r.value)state={...state,...JSON.parse(r.value)};}catch(e){}
+}
+
+function bestStreak(){
+  if(!state.habits.length)return 0;
+  let best=0,cur=0;
+  const today=new Date();
+  for(let i=29;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const k=d.toISOString().slice(0,10);
+    const c=state.completions[k]||{};
+    const done=state.habits.filter(h=>c[h.id]).length;
+    if(state.habits.length>0&&done===state.habits.length){cur++;best=Math.max(best,cur);}
+    else cur=0;
+  }
+  return best;
+}
+function weekPct(){
+  if(!state.habits.length)return 0;
+  let tot=0,done=0;
+  const today=new Date();
+  for(let i=6;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const k=d.toISOString().slice(0,10);
+    const c=state.completions[k]||{};
+    state.habits.forEach(h=>{tot++;if(c[h.id])done++;});
+  }
+  return tot?Math.round(done/tot*100):0;
+}
+function habitStreak(id){
+  let s=0;const today=new Date();
+  for(let i=0;i<30;i++){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const k=d.toISOString().slice(0,10);
+    if(i===0){const c=state.completions[k]||{};if(!c[id]&&s===0)continue;}
+    const c=state.completions[k]||{};
+    if(c[id])s++;else break;
+  }
+  return s;
+}
+
+function render(){
+  const today=getToday();
+  const done=state.habits.filter(h=>today[h.id]).length;
+  const total=state.habits.length;
+  const pct=total?Math.round(done/total*100):0;
+
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('s-today').textContent=done+'/'+total;
+  document.getElementById('s-streak').textContent=bestStreak();
+  document.getElementById('s-week').textContent=weekPct()+'%';
+
+  const list=document.getElementById('habits-list');
+  if(!state.habits.length){
+    list.innerHTML='<div class="empty"><i class="ti ti-list-check" aria-hidden="true"></i>No habits yet — add your first one below.</div>';
+  } else {
+    list.innerHTML=state.habits.map(h=>`
+      <div class="habit${today[h.id]?' done':''}" data-id="${h.id}" role="button" tabindex="0" aria-label="${h.name}">
+        <div class="check"><i class="ti ti-check" aria-hidden="true"></i></div>
+        <div class="hinfo">
+          <div class="hname">${h.emoji} ${h.name}</div>
+          <div class="hmeta">${h.time}</div>
+        </div>
+        <div class="hright">
+          <div class="streak-badge"><i class="ti ti-flame" aria-hidden="true"></i>${habitStreak(h.id)}</div>
+          <button class="del-btn" data-del="${h.id}" aria-label="Remove ${h.name}"><i class="ti ti-x" aria-hidden="true"></i></button>
+        </div>
+      </div>`).join('');
+  }
+
+  renderWeek();
+  renderEmojis();
+  renderTags();
+
+  const now=new Date().getHours();
+  const greet=now<12?'Rise and grind':now<17?'Keep pushing':'Finish strong';
+  document.getElementById('hero-sub').textContent=greet+' — you\'ve got this.';
+
+  const opts={weekday:'long',month:'long',day:'numeric'};
+  document.getElementById('hero-date').textContent=new Date().toLocaleDateString(undefined,opts);
+  document.getElementById('quote-text').textContent=QUOTES[new Date().getDay()%QUOTES.length];
+}
+
+function renderWeek(){
+  const today=new Date();const tk=todayKey();
+  document.getElementById('week-row').innerHTML=Array.from({length:7},(_,i)=>{
+    const d=new Date(today);d.setDate(today.getDate()-6+i);
+    const k=d.toISOString().slice(0,10);
+    const c=state.completions[k]||{};
+    const done=state.habits.filter(h=>c[h.id]).length;
+    const total=state.habits.length;
+    const isToday=k===tk;
+    let cls='wday-dot';
+    if(total>0&&done===total)cls+=' full';
+    else if(total>0&&done>0)cls+=' partial';
+    if(isToday)cls+=' today';
+    return`<div class="wday"><div class="wday-lbl">${DAYS[d.getDay()]}</div><div class="${cls}">${d.getDate()}</div></div>`;
+  }).join('');
+}
+
+function renderEmojis(){
+  document.getElementById('emoji-row').innerHTML=EMOJIS.map(e=>
+    `<button class="ebtn${state.selEmoji===e?' sel':''}" data-emoji="${e}" aria-label="${e}">${e}</button>`
+  ).join('');
+}
+function renderTags(){
+  document.getElementById('tags').innerHTML=TIMES.map(t=>
+    `<div class="tag${state.selTime===t?' sel':''}" data-time="${t}">${t}</div>`
+  ).join('');
+}
+
+document.getElementById('habits-list').addEventListener('click',async e=>{
+  const del=e.target.closest('[data-del]');
+  if(del){state.habits=state.habits.filter(h=>h.id!==del.getAttribute('data-del'));await persist();render();return;}
+  const card=e.target.closest('.habit');
+  if(card){const id=card.getAttribute('data-id');const t=getToday();t[id]=!t[id];setToday(t);await persist();render();}
+});
+document.getElementById('habits-list').addEventListener('keydown',async e=>{
+  if(e.key==='Enter'||e.key===' '){const c=e.target.closest('.habit');if(c){e.preventDefault();c.click();}}
+});
+document.getElementById('emoji-row').addEventListener('click',e=>{
+  const b=e.target.closest('[data-emoji]');if(b){state.selEmoji=b.getAttribute('data-emoji');render();}
+});
+document.getElementById('tags').addEventListener('click',e=>{
+  const t=e.target.closest('[data-time]');if(t){state.selTime=t.getAttribute('data-time');render();}
+});
+document.getElementById('add-btn').addEventListener('click',async()=>{
+  const inp=document.getElementById('add-input');
+  const name=inp.value.trim();if(!name)return;
+  state.habits.push({id:Date.now().toString(),name,emoji:state.selEmoji,time:state.selTime});
+  inp.value='';await persist();render();
+});
+document.getElementById('add-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter')document.getElementById('add-btn').click();
+});
+
+(async()=>{
+  await hydrate();
+  if(!state.habits.length){
+    state.habits=[
+      {id:'1',name:'Drink 8 glasses of water',emoji:'💧',time:'Anytime'},
+      {id:'2',name:'Morning workout',emoji:'🏃',time:'Morning'},
+      {id:'3',name:'Read for 20 minutes',emoji:'📖',time:'Evening'},
+    ];
+  }
+  render();
+})();
+</script>
